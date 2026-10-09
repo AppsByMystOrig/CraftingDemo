@@ -1,0 +1,27 @@
+I'm building a Blazor application called AppsByMyst, a crafting recipe companion for video games.
+
+Please examine the existing project before making changes.
+
+Architecture requirements:
+
+- Use Blazor Web App with Interactive Server rendering.
+- The application will eventually use SQL Server.
+- I will design the SQL Server database and stored procedures myself.
+- All recipe recursion, quantity calculations, and material aggregation will be handled by SQL Server stored procedures.
+- Do not implement recipe recursion in C#.
+- Keep database access separate from the Blazor components.
+- The application must eventually support multiple games, potentially with separate databases.
+- Do not introduce Entity Framework or design database tables without asking me first.
+
+For our first prototype:
+
+1. Create a page that displays a fictional crafting recipe.
+2. Use hardcoded sample data for now.
+3. Show ingredients as an indented list based on a recursion-level field.
+4. Display consolidated base-material totals below the list.
+5. Include a quantity selector.
+6. Use a clean, responsive layout suitable for desktop and mobile browsers.
+
+Do not connect to a database yet.
+
+Please explain your proposed changes before implementing them, and build and test the application afterward.
