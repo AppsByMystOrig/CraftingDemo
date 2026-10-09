@@ -1,0 +1,95 @@
+@page "/"
+@rendermode InteractiveServer
+@inject IRecipeRepository Recipes
+
+<PageTitle>@(breakdown?.RecipeName ?? "Recipe") – CraftingDemo</PageTitle>
+
+@if (breakdown is null)
+{
+    <p class="status">@(loaded ? "Recipe not found." : "Loading recipe…")</p>
+}
+else
+{
+    <header class="recipe-header">
+        <div>
+            <p class="game-name">@breakdown.GameName</p>
+            <h1>@breakdown.RecipeName</h1>
+        </div>
+
+        <div class="quantity">
+            <label for="quantity">Quantity</label>
+            <div class="stepper">
+                <button type="button" aria-label="Decrease quantity"
+                        disabled="@(quantity <= MinQuantity)"
+                        @onclick="() => SetQuantityAsync(quantity - 1)">−</button>
+                <input id="quantity" type="number" inputmode="numeric"
+                       min="@MinQuantity" max="@MaxQuantity"
+                       @bind:get="quantity" @bind:set="SetQuantityAsync" />
+                <button type="button" aria-label="Increase quantity"
+                        disabled="@(quantity >= MaxQuantity)"
+                        @onclick="() => SetQuantityAsync(quantity + 1)">+</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="panels">
+        <section class="panel" aria-labelledby="ingredients-heading">
+            <h2 id="ingredients-heading">Ingredients</h2>
+            <ul class="rows leveled">
+                @foreach (var row in breakdown.Ingredients)
+                {
+                    <li class="row level-@Math.Min(row.Level, MaxStyledLevel)" style="--level: @row.Level">
+                        <span class="item-name">
+                            @row.ItemName
+                            @if (row.IsBaseMaterial)
+                            {
+                                <span class="tag">base</span>
+                            }
+                        </span>
+                        <span class="item-quantity">× @row.Quantity.ToString("N0")</span>
+                    </li>
+                }
+            </ul>
+        </section>
+
+        <section class="panel" aria-labelledby="totals-heading">
+            <h2 id="totals-heading">Base material totals</h2>
+            <ul class="rows">
+                @foreach (var total in breakdown.BaseMaterials)
+                {
+                    <li class="row">
+                        <span class="item-name">@total.ItemName</span>
+                        <span class="item-quantity">× @total.Quantity.ToString("N0")</span>
+                    </li>
+                }
+            </ul>
+        </section>
+    </div>
+}
+
+@code {
+    private const int MinQuantity = 1;
+    private const int MaxQuantity = 999;
+
+    // Deepest level with its own background in Recipe.razor.css; deeper rows reuse it.
+    private const int MaxStyledLevel = 3;
+
+    private RecipeBreakdown? breakdown;
+    private bool loaded;
+    private int quantity = MinQuantity;
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    private Task SetQuantityAsync(int value)
+    {
+        quantity = Math.Clamp(value, MinQuantity, MaxQuantity);
+        return LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        breakdown = await Recipes.GetRecipeBreakdownAsync(
+            SampleRecipeRepository.SampleGameKey, SampleRecipeRepository.SampleRecipeId, quantity);
+        loaded = true;
+    }
+}

@@ -1,0 +1,59 @@
+:root {
+    color-scheme: light dark;
+    --bg: #f5f4f1;
+    --surface: #ffffff;
+    --text: #1f1d1a;
+    --muted: #6b665e;
+    --border: #e1ddd5;
+    --hover: #f0ede7;
+    --accent: #b4491c;
+    --accent-soft: #fbe9df;
+    --indent: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #171615;
+        --surface: #211f1d;
+        --text: #ece8e1;
+        --muted: #a39d92;
+        --border: #36322e;
+        --hover: #2c2926;
+        --accent: #f0895a;
+        --accent-soft: #3a241a;
+    }
+}
+
+@media (max-width: 30rem) {
+    :root {
+        --indent: 1rem;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.45;
+}
+
+h1:focus {
+    outline: none;
+}
+
+.blazor-error-boundary {
+    padding: 1rem;
+    background: #b32121;
+    color: white;
+}
+
+    .blazor-error-boundary::after {
+        content: "An error has occurred."
+    }

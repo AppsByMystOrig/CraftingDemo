@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CraftingDemo.Data/CraftingDemo.Data.csproj" />
+  <Project Path="CraftingDemo/CraftingDemo.csproj" />
+</Solution>

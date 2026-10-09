@@ -1,0 +1,241 @@
+.status {
+    color: var(--muted);
+}
+
+.recipe-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.game-name {
+    margin: 0 0 0.25rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 5vw, 2.1rem);
+    line-height: 1.15;
+}
+
+.quantity label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.stepper {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    overflow: hidden;
+}
+
+    .stepper button,
+    .stepper input {
+        height: 2.75rem;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+    }
+
+    .stepper button {
+        width: 2.75rem;
+        font-size: 1.25rem;
+        cursor: pointer;
+    }
+
+        .stepper button:hover:not(:disabled) {
+            background: var(--hover);
+        }
+
+        .stepper button:disabled {
+            color: var(--muted);
+            cursor: default;
+            opacity: 0.5;
+        }
+
+    .stepper input {
+        width: 4.5rem;
+        border-inline: 1px solid var(--border);
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        appearance: textfield;
+        -moz-appearance: textfield;
+    }
+
+        .stepper input::-webkit-outer-spin-button,
+        .stepper input::-webkit-inner-spin-button {
+            margin: 0;
+            -webkit-appearance: none;
+        }
+
+    .stepper button:focus-visible,
+    .stepper input:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+    }
+
+.panels {
+    display: grid;
+    gap: 1rem;
+}
+
+.panel {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--surface);
+}
+
+    .panel h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+    }
+
+.rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    padding-left: calc(var(--level, 0) * var(--indent));
+    border-top: 1px solid var(--border);
+}
+
+    .row:first-child {
+        border-top: 0;
+    }
+
+    .row.level-0 {
+        font-weight: 600;
+    }
+
+/* Ingredient rows are shaded by recursion level, darkest at the top of the tree. */
+.leveled .row {
+    padding-right: 0.75rem;
+    /* Indent stops growing after 6 levels so deep recipes keep room for the name. */
+    padding-left: calc(0.75rem + min(var(--level, 0), 6) * var(--indent));
+    border-top: 0;
+    background: var(--row-bg);
+    color: var(--row-text);
+}
+
+.leveled .level-0 {
+    --row-bg: #000000;
+    --row-text: #ffffff;
+}
+
+.leveled .level-1 {
+    --row-bg: #4d4d4d;
+    --row-text: #ffffff;
+}
+
+.leveled .level-2 {
+    --row-bg: #c8c8c8;
+    --row-text: #111111;
+}
+
+.leveled .level-3 {
+    --row-bg: #ffffff;
+    --row-text: #111111;
+}
+
+.leveled .tag {
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+}
+
+.item-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.item-quantity {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.tag {
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+@media (max-width: 30rem) {
+    .recipe-header {
+        margin-bottom: 1rem;
+    }
+
+    .quantity {
+        width: 100%;
+    }
+
+    .stepper {
+        display: flex;
+    }
+
+        .stepper button,
+        .stepper input {
+            height: 3rem;
+        }
+
+        .stepper button {
+            width: 3.5rem;
+        }
+
+        .stepper input {
+            flex: 1;
+            min-width: 0;
+        }
+
+    .panel {
+        padding: 0.75rem;
+    }
+
+    .row {
+        gap: 0.75rem;
+        padding-block: 0.65rem;
+    }
+
+    .leveled .row {
+        padding-right: 0.6rem;
+        padding-left: calc(0.6rem + min(var(--level, 0), 6) * var(--indent));
+    }
+}
+
+@media (min-width: 48rem) {
+    .panels {
+        grid-template-columns: 3fr 2fr;
+        align-items: start;
+    }
+
+    .panel {
+        padding: 1.25rem;
+    }
+}
