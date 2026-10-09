@@ -38,7 +38,7 @@ else
             <ul class="rows leveled">
                 @foreach (var row in breakdown.Ingredients)
                 {
-                    <li class="row level-@Math.Min(row.Level, MaxStyledLevel)" style="--level: @row.Level">
+                    <li class="row @LevelClass(row.Level)" style="--level: @row.Level">
                         <span class="item-name">
                             @row.ItemName
                             @if (row.IsBaseMaterial)
@@ -71,8 +71,9 @@ else
     private const int MinQuantity = 1;
     private const int MaxQuantity = 999;
 
-    // Deepest level with its own background in Recipe.razor.css; deeper rows reuse it.
-    private const int MaxStyledLevel = 3;
+    // Backgrounds alternate by level parity; see Recipe.razor.css.
+    private static string LevelClass(int level) =>
+        (level == 0 ? "level-0 " : "") + (level % 2 == 0 ? "level-even" : "level-odd");
 
     private RecipeBreakdown? breakdown;
     private bool loaded;

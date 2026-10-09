@@ -1,6 +1,6 @@
 :root {
-    color-scheme: light dark;
-    --bg: #f5f4f1;
+    color-scheme: light;
+    --bg: #eef6fd;
     --surface: #ffffff;
     --text: #1f1d1a;
     --muted: #6b665e;
@@ -9,19 +9,6 @@
     --accent: #b4491c;
     --accent-soft: #fbe9df;
     --indent: 1.5rem;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #171615;
-        --surface: #211f1d;
-        --text: #ece8e1;
-        --muted: #a39d92;
-        --border: #36322e;
-        --hover: #2c2926;
-        --accent: #f0895a;
-        --accent-soft: #3a241a;
-    }
 }
 
 @media (max-width: 30rem) {
