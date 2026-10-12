@@ -129,7 +129,7 @@ h1 {
         font-weight: 600;
     }
 
-/* Ingredient rows alternate by recursion level: even levels grey, odd levels green. */
+/* Ingredient rows alternate by recursion level: even levels grey, odd levels blue-grey. */
 .leveled .row {
     padding-right: 0.75rem;
     /* Indent stops growing after 6 levels so deep recipes keep room for the name. */
@@ -139,17 +139,27 @@ h1 {
 }
 
 .leveled .level-even {
-    --row-bg: #e9e9e9;
+    --row-bg: var(--row-even);
 }
 
 .leveled .level-odd {
-    --row-bg: #d9f2d9;
+    --row-bg: var(--row-odd);
 }
+
+/* Totals have no levels, so two warm complements of the ingredient colours alternate. */
+.striped .row {
+    padding-inline: 0.75rem;
+    border-top: 0;
+    background: var(--total-even);
+}
+
+    .striped .row:nth-child(even) {
+        background: var(--total-odd);
+    }
 
 .leveled .tag {
     border: 1px solid currentColor;
     background: transparent;
-    color: inherit;
 }
 
 .item-name {
@@ -213,6 +223,10 @@ h1 {
     .leveled .row {
         padding-right: 0.6rem;
         padding-left: calc(0.6rem + min(var(--level, 0), 6) * var(--indent));
+    }
+
+    .striped .row {
+        padding-inline: 0.6rem;
     }
 }
 

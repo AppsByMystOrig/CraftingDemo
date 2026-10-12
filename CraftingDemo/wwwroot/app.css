@@ -1,13 +1,21 @@
 :root {
     color-scheme: light;
-    --bg: #eef6fd;
+    /* Cool light-grey neutrals with a slate-blue accent. */
+    --bg: #f1f3f5;
     --surface: #ffffff;
-    --text: #1f1d1a;
-    --muted: #6b665e;
-    --border: #e1ddd5;
-    --hover: #f0ede7;
-    --accent: #b4491c;
-    --accent-soft: #fbe9df;
+    --text: #212934;
+    --muted: #667085;
+    --border: #dde2e8;
+    --hover: #e9edf1;
+    --accent: #3b6ea5;
+    --accent-soft: #dfe8f1;
+    --header-bg: #2f4156;
+    --header-text: #ffffff;
+    --row-even: #eceff2;
+    --row-odd: #dfe8f1;
+    /* Warm complements of the two row colours above, for the totals list. */
+    --total-even: #f3efea;
+    --total-odd: #f3e5d6;
     --indent: 1.5rem;
 }
 
