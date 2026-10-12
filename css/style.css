@@ -6,6 +6,7 @@
   --blue: #2ea3e8;
   --gold: #f5b400;
   --silver: #c9c9cf;
+  --ink: #2b2140;
   --gutter: clamp(1rem, 3vw, 2.5rem);
 }
 
@@ -97,34 +98,71 @@ h1 {
   font-size: clamp(0.95rem, 1.4vw, 1.15rem);
 }
 
-/* Content under the logo */
+/* Content under the logo: three selectable cards and the panel they open */
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
 .content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--gutter);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   margin-top: var(--gutter);
 }
 
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+}
+
 .card {
-  padding: 1.25rem 1.5rem;
-  border-top: 4px solid var(--accent, var(--silver));
-  border-radius: 12px;
+  padding: clamp(0.75rem, 2vw, 1.25rem) clamp(0.5rem, 2vw, 1.5rem);
+  border: 0;
+  border-top: 4px solid var(--accent);
+  border-radius: 12px 12px 0 0;
   background: rgba(0, 0, 0, 0.22);
-}
-
-.card--life { --accent: var(--silver); }
-.card--music { --accent: var(--blue); }
-.card--gaming { --accent: var(--gold); }
-
-.card h2 {
-  margin: 0;
   color: var(--accent);
-  font-size: 1.35rem;
+  font: inherit;
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
-.card p {
-  margin: 0.5rem 0 0;
-  color: var(--text-muted);
+.card:hover {
+  background: rgba(0, 0, 0, 0.36);
+}
+
+.card:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* The selected card takes its panel's colour so the two read as one piece */
+.card[aria-selected="true"] {
+  background: var(--light);
+  color: var(--ink);
+}
+
+.card--life, .panel--life { --accent: var(--silver); --light: #eeeef2; }
+.card--music, .panel--music { --accent: var(--blue); --light: #dff1fc; }
+.card--gaming, .panel--gaming { --accent: var(--gold); --light: #fff3cf; }
+
+/* Fills the rest of the screen below the cards */
+.panel {
+  flex: 1;
+  padding: clamp(1rem, 3vw, 2rem);
+  border-radius: 0 0 12px 12px;
+  background: var(--light);
+  color: var(--ink);
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
 }
 
 .footer {
