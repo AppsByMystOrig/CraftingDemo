@@ -6,6 +6,12 @@
       "runtimeExecutable": "dotnet",
       "runtimeArgs": ["run", "--project", "CraftingDemo", "--no-launch-profile", "-e", "ASPNETCORE_ENVIRONMENT=Development", "--", "--urls", "http://localhost:5075"],
       "port": 5075
+    },
+    {
+      "name": "appsbymyst",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "-l", "5173", "."],
+      "port": 5173
     }
   ]
 }
