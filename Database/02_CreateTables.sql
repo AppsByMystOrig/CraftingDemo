@@ -2,8 +2,11 @@
     02_CreateTables.sql
     Recipe data model. Safe to re-run: each table is created only if missing.
 
-    Game              One row per game. GameKey is what the app passes in.
-    Item              Every item in a game, craftable or not.
+    Each game has its own database, so there is no game table or game id.
+    The game's display name lives in the app's settings, next to its
+    connection string.
+
+    Item              Every item in the game, craftable or not.
     Recipe            How to craft one item. OutputQuantity is the yield per craft.
     RecipeIngredient  The items (and how many) one craft of a recipe consumes.
 
@@ -13,31 +16,15 @@
 USE CraftingDemo;
 GO
 
-IF OBJECT_ID(N'dbo.Game', N'U') IS NULL
-BEGIN
-    CREATE TABLE dbo.Game
-    (
-        GameId  int           IDENTITY(1, 1) NOT NULL,
-        GameKey varchar(50)   NOT NULL,
-        Name    nvarchar(100) NOT NULL,
-
-        CONSTRAINT PK_Game PRIMARY KEY (GameId),
-        CONSTRAINT UQ_Game_GameKey UNIQUE (GameKey)
-    );
-END
-GO
-
 IF OBJECT_ID(N'dbo.Item', N'U') IS NULL
 BEGIN
     CREATE TABLE dbo.Item
     (
         ItemId int           IDENTITY(1, 1) NOT NULL,
-        GameId int           NOT NULL,
         Name   nvarchar(100) NOT NULL,
 
         CONSTRAINT PK_Item PRIMARY KEY (ItemId),
-        CONSTRAINT FK_Item_Game FOREIGN KEY (GameId) REFERENCES dbo.Game (GameId),
-        CONSTRAINT UQ_Item_GameId_Name UNIQUE (GameId, Name)
+        CONSTRAINT UQ_Item_Name UNIQUE (Name)
     );
 END
 GO

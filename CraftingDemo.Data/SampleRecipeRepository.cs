@@ -8,7 +8,6 @@ namespace CraftingDemo.Data;
 /// </summary>
 public sealed class SampleRecipeRepository : IRecipeRepository
 {
-    public const string SampleGameKey = "ashfall";
     public const int SampleRecipeId = 1;
 
     private static readonly RecipeIngredientRow[] Ingredients =
@@ -41,9 +40,9 @@ public sealed class SampleRecipeRepository : IRecipeRepository
     ];
 
     public Task<RecipeBreakdown?> GetRecipeBreakdownAsync(
-        string gameKey, int recipeId, int quantity, CancellationToken cancellationToken = default)
+        int recipeId, int quantity, CancellationToken cancellationToken = default)
     {
-        if (gameKey != SampleGameKey || recipeId != SampleRecipeId)
+        if (recipeId != SampleRecipeId)
         {
             return Task.FromResult<RecipeBreakdown?>(null);
         }

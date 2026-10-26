@@ -3,13 +3,13 @@ using Microsoft.Data.SqlClient;
 
 namespace CraftingDemo.Data;
 
-/// <summary>Where <see cref="SqlRecipeRepository"/> connects and which procedure it calls.</summary>
-/// <param name="GetConnectionString">
-/// Returns the connection string for a game key, so games can live in separate databases.
-/// </param>
+/// <summary>The game this copy of the app serves, and where its recipes live.</summary>
+/// <param name="GameName">Display name shown on the page; the database does not store it.</param>
+/// <param name="ConnectionString">The game's own database.</param>
 /// <param name="BreakdownProcedure">Stored procedure that returns a <see cref="RecipeBreakdown"/>.</param>
 public sealed record SqlRecipeRepositoryOptions(
-    Func<string, string> GetConnectionString,
+    string GameName,
+    string ConnectionString,
     string BreakdownProcedure = "dbo.GetRecipeBreakdown");
 
 /// <summary>
@@ -20,27 +20,25 @@ public sealed record SqlRecipeRepositoryOptions(
 public sealed class SqlRecipeRepository(SqlRecipeRepositoryOptions options) : IRecipeRepository
 {
     public async Task<RecipeBreakdown?> GetRecipeBreakdownAsync(
-        string gameKey, int recipeId, int quantity, CancellationToken cancellationToken = default)
+        int recipeId, int quantity, CancellationToken cancellationToken = default)
     {
-        await using var connection = new SqlConnection(options.GetConnectionString(gameKey));
+        await using var connection = new SqlConnection(options.ConnectionString);
         await using var command = new SqlCommand(options.BreakdownProcedure, connection)
         {
             CommandType = CommandType.StoredProcedure,
         };
-        command.Parameters.Add("@GameKey", SqlDbType.VarChar, 50).Value = gameKey;
         command.Parameters.Add("@RecipeId", SqlDbType.Int).Value = recipeId;
         command.Parameters.Add("@Quantity", SqlDbType.Int).Value = quantity;
 
         await connection.OpenAsync(cancellationToken);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-        // 1. Header: no row means the game or recipe was not found.
+        // 1. Header: no row means the recipe was not found.
         if (!await reader.ReadAsync(cancellationToken))
         {
             return null;
         }
 
-        var gameName = reader.GetString(reader.GetOrdinal("GameName"));
         var recipeName = reader.GetString(reader.GetOrdinal("RecipeName"));
 
         // 2. Ingredient rows.
@@ -71,6 +69,6 @@ public sealed class SqlRecipeRepository(SqlRecipeRepositoryOptions options) : IR
                 reader.GetInt32(totalQuantity)));
         }
 
-        return new RecipeBreakdown(gameName, recipeName, quantity, ingredients, baseMaterials);
+        return new RecipeBreakdown(options.GameName, recipeName, quantity, ingredients, baseMaterials);
     }
 }

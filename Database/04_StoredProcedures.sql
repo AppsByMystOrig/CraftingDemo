@@ -8,11 +8,11 @@ GO
 /*
     dbo.GetRecipeBreakdown
     Everything the recipe page shows, for one recipe at one craft quantity.
-    This replaces SampleRecipeRepository: recursion, quantity maths and the
-    base-material totals all happen here.
+    Recursion, quantity maths and the base-material totals all happen here.
+    Each game has its own database, so there is no game parameter.
 
-    Returns three result sets (all empty if the game or recipe is not found):
-      1. Header       GameName, RecipeName, Quantity                (0 or 1 row)
+    Returns three result sets (all empty if the recipe is not found):
+      1. Header       RecipeName, Quantity                          (0 or 1 row)
       2. Ingredients  Level, ItemName, Quantity, IsBaseMaterial     (display order)
       3. Base totals  ItemName, Quantity                            (largest first)
 
@@ -22,7 +22,6 @@ GO
     in two branches, each branch rounds up on its own.
 */
 CREATE OR ALTER PROCEDURE dbo.GetRecipeBreakdown
-    @GameKey  varchar(50),
     @RecipeId int,
     @Quantity int
 AS
@@ -52,10 +51,7 @@ BEGIN
             CAST('' AS varchar(900))                                     AS SortPath,
             CAST('/' + CAST(r.OutputItemId AS varchar(10)) + '/' AS varchar(900)) AS ItemPath
         FROM dbo.Recipe AS r
-        JOIN dbo.Item AS i ON i.ItemId = r.OutputItemId
-        JOIN dbo.Game AS g ON g.GameId = i.GameId
         WHERE r.RecipeId = @RecipeId
-          AND g.GameKey = @GameKey
 
         UNION ALL
 
@@ -87,14 +83,11 @@ BEGIN
 
     -- 1. Header
     SELECT
-        g.Name     AS GameName,
         i.Name     AS RecipeName,
         @Quantity  AS Quantity
     FROM dbo.Recipe AS r
     JOIN dbo.Item AS i ON i.ItemId = r.OutputItemId
-    JOIN dbo.Game AS g ON g.GameId = i.GameId
-    WHERE r.RecipeId = @RecipeId
-      AND g.GameKey = @GameKey;
+    WHERE r.RecipeId = @RecipeId;
 
     -- 2. Ingredients, depth-first in recipe order
     SELECT Level, ItemName, Quantity, IsBaseMaterial

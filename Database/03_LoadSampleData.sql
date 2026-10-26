@@ -1,9 +1,10 @@
 /*
     03_LoadSampleData.sql
     Loads the sample "Ashfall Chronicles" game: the same Emberforged Longsword
-    recipe the app currently hardcodes in SampleRecipeRepository.cs.
+    recipe the app hardcodes in SampleRecipeRepository.cs. This database is
+    that game's database; its display name is set in the app's settings.
 
-    Loads only once: if the game is already present, nothing is changed.
+    Loads only into an empty database: if any items exist, nothing is changed.
     On a fresh database the Longsword recipe gets RecipeId 1, which is the
     id the app asks for today.
 */
@@ -13,21 +14,16 @@ GO
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
 
-IF EXISTS (SELECT 1 FROM dbo.Game WHERE GameKey = 'ashfall')
+IF EXISTS (SELECT 1 FROM dbo.Item)
 BEGIN
-    PRINT 'Sample game ''ashfall'' is already loaded; nothing changed.';
+    PRINT 'The database already has items; sample data not loaded.';
     RETURN;
 END
 
 BEGIN TRANSACTION;
 
-INSERT dbo.Game (GameKey, Name)
-VALUES ('ashfall', N'Ashfall Chronicles');
-
-DECLARE @GameId int = SCOPE_IDENTITY();
-
-INSERT dbo.Item (GameId, Name)
-SELECT @GameId, v.Name
+INSERT dbo.Item (Name)
+SELECT v.Name
 FROM (VALUES
     -- Crafted items
     (N'Emberforged Longsword'),
@@ -57,7 +53,7 @@ FROM (VALUES
     (5, N'Linen Thread',          1),
     (6, N'Fire Rune',             1)
 ) AS v (Seq, ItemName, OutputQuantity)
-JOIN dbo.Item AS i ON i.GameId = @GameId AND i.Name = v.ItemName
+JOIN dbo.Item AS i ON i.Name = v.ItemName
 ORDER BY v.Seq;
 
 -- Quantities are per single craft of the recipe.
@@ -83,11 +79,11 @@ FROM (VALUES
     (N'Fire Rune',             N'Emberstone',            2, 1),
     (N'Fire Rune',             N'Rune Dust',             1, 2)
 ) AS v (RecipeItemName, IngredientName, Quantity, SortOrder)
-JOIN dbo.Item AS crafted ON crafted.GameId = @GameId AND crafted.Name = v.RecipeItemName
+JOIN dbo.Item AS crafted ON crafted.Name = v.RecipeItemName
 JOIN dbo.Recipe AS r ON r.OutputItemId = crafted.ItemId
-JOIN dbo.Item AS ingredient ON ingredient.GameId = @GameId AND ingredient.Name = v.IngredientName;
+JOIN dbo.Item AS ingredient ON ingredient.Name = v.IngredientName;
 
 COMMIT TRANSACTION;
 
-PRINT 'Sample game ''ashfall'' loaded.';
+PRINT 'Sample data loaded.';
 GO

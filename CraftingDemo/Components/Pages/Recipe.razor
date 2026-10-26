@@ -72,6 +72,9 @@ else
     private const int MinQuantity = 1;
     private const int MaxQuantity = 999;
 
+    // Fixed until there is a way to pick a recipe.
+    private const int RecipeId = 1;
+
     // Backgrounds alternate by level parity; see Recipe.razor.css.
     private static string LevelClass(int level) =>
         (level == 0 ? "level-0 " : "") + (level % 2 == 0 ? "level-even" : "level-odd");
@@ -98,8 +101,7 @@ else
     {
         try
         {
-            breakdown = await Recipes.GetRecipeBreakdownAsync(
-                SampleRecipeRepository.SampleGameKey, SampleRecipeRepository.SampleRecipeId, quantity);
+            breakdown = await Recipes.GetRecipeBreakdownAsync(RecipeId, quantity);
             loadFailed = false;
         }
         catch (Exception ex)
