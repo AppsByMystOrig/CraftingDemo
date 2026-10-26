@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Affinity source files (masters live in abmwebsite/images, kept local)
+*.af
