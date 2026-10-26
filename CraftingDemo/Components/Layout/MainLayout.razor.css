@@ -1,23 +1,76 @@
+.site-header,
+.content {
+    width: 100%;
+    max-width: 60rem;
+    margin: 0 auto;
+}
+
 .site-header {
-    padding: 0.75rem 1rem;
-    background: var(--header-bg);
+    padding: 1rem 1rem 0;
 }
 
 .brand {
-    color: var(--header-text);
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    color: var(--on-bg);
     text-decoration: none;
 }
 
+.brand-logo {
+    display: block;
+    width: 4.5rem;
+    height: auto;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.brand-name {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.app-name {
+    margin-top: 0.2rem;
+    color: var(--brand-blue);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
 .content {
-    max-width: 60rem;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
+    flex: 1;
+    padding: 1.5rem 1rem 2rem;
+}
+
+.site-footer {
+    padding: 1rem;
+    color: var(--on-bg-muted);
+    font-size: 0.875rem;
+    text-align: center;
 }
 
 @media (max-width: 30rem) {
+    .site-header {
+        padding: 0.75rem 0.75rem 0;
+    }
+
+    .brand-logo {
+        width: 3.5rem;
+    }
+
+    .brand-name {
+        font-size: 1.35rem;
+    }
+
     .content {
-        padding: 1rem 0.75rem 2rem;
+        padding: 1rem 0.75rem 1.5rem;
     }
 }
 

@@ -1,5 +1,5 @@
 .status {
-    color: var(--muted);
+    color: var(--on-bg-muted);
 }
 
 .recipe-header {
@@ -13,7 +13,7 @@
 
 .game-name {
     margin: 0 0 0.25rem;
-    color: var(--muted);
+    color: var(--brand-gold);
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -22,6 +22,8 @@
 
 h1 {
     margin: 0;
+    color: var(--on-bg);
+    font-weight: 800;
     font-size: clamp(1.5rem, 5vw, 2.1rem);
     line-height: 1.15;
 }
@@ -29,7 +31,7 @@ h1 {
 .quantity label {
     display: block;
     margin-bottom: 0.3rem;
-    color: var(--muted);
+    color: var(--on-bg-muted);
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -39,6 +41,7 @@ h1 {
     border: 1px solid var(--border);
     border-radius: 0.5rem;
     background: var(--surface);
+    color: var(--text);
     overflow: hidden;
 }
 
@@ -95,9 +98,10 @@ h1 {
 
 .panel {
     padding: 1rem;
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
+    border-radius: 12px;
     background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 6px 20px rgba(43, 33, 64, 0.25);
 }
 
     .panel h2 {

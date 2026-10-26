@@ -1,12 +1,23 @@
 @inherits LayoutComponentBase
 
 <header class="site-header">
-    <a class="brand" href="">CraftingDemo</a>
+    <a class="brand" href="">
+        <img class="brand-logo" src="images/logo.png" width="682" height="615"
+             alt="Moments with Myst — Life, Music, Gaming" />
+        <span class="brand-text">
+            <span class="brand-name">Apps By Myst</span>
+            <span class="app-name">CraftingDemo</span>
+        </span>
+    </a>
 </header>
 
 <main class="content">
     @Body
 </main>
+
+<footer class="site-footer">
+    &copy; @DateTime.Now.Year appsbymyst
+</footer>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

@@ -1,21 +1,20 @@
 :root {
     color-scheme: light;
-    /* Cool light-grey neutrals with a slate-blue accent. */
-    --bg: #f1f3f5;
-    --surface: #ffffff;
-    --text: #212934;
-    --muted: #667085;
-    --border: #dde2e8;
-    --hover: #e9edf1;
-    --accent: #3b6ea5;
-    --accent-soft: #dfe8f1;
-    --header-bg: #2f4156;
-    --header-text: #ffffff;
-    --row-even: #eceff2;
-    --row-odd: #dfe8f1;
-    /* Warm complements of the two row colours above, for the totals list. */
-    --total-even: #f3efea;
-    --total-odd: #f3e5d6;
+    /* App colours, built from the appsbymyst brand values in brand.css.
+       CraftingDemo belongs to the Gaming section, so gold leads. */
+    --on-bg: var(--brand-text);
+    --on-bg-muted: var(--brand-text-muted);
+    --surface: #fffcf5;
+    --text: var(--brand-ink);
+    --muted: #6b5f7d;
+    --border: #eadfc4;
+    --hover: #f7eed6;
+    --accent: var(--brand-banner-bottom);
+    --row-even: var(--brand-gaming-light);
+    --row-odd: #ffe6a1;
+    /* Blue from the Music section: the complement of the gold rows above. */
+    --total-even: #eef8fe;
+    --total-odd: var(--brand-music-light);
     --indent: 1.5rem;
 }
 
@@ -31,11 +30,16 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+}
+
 body {
+    min-height: 100%;
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    color: var(--on-bg);
     line-height: 1.45;
 }
 
