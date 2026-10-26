@@ -99,9 +99,16 @@ h1 {
 .panel {
     padding: 1rem;
     border-radius: 12px;
-    background: var(--surface);
+    background: var(--panel-bg, var(--surface));
     color: var(--text);
-    box-shadow: 0 6px 20px rgba(43, 33, 64, 0.25);
+}
+
+.panel-gaming {
+    --panel-bg: var(--panel-gaming);
+}
+
+.panel-music {
+    --panel-bg: var(--panel-music);
 }
 
     .panel h2 {

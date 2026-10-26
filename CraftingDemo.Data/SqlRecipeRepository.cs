@@ -1,0 +1,76 @@
+using System.Data;
+using Microsoft.Data.SqlClient;
+
+namespace CraftingDemo.Data;
+
+/// <summary>Where <see cref="SqlRecipeRepository"/> connects and which procedure it calls.</summary>
+/// <param name="GetConnectionString">
+/// Returns the connection string for a game key, so games can live in separate databases.
+/// </param>
+/// <param name="BreakdownProcedure">Stored procedure that returns a <see cref="RecipeBreakdown"/>.</param>
+public sealed record SqlRecipeRepositoryOptions(
+    Func<string, string> GetConnectionString,
+    string BreakdownProcedure = "dbo.GetRecipeBreakdown");
+
+/// <summary>
+/// Reads recipes from SQL Server. The stored procedure does all recursion, quantity
+/// maths and aggregation; this class only maps its three result sets:
+/// header, ingredient rows (in display order) and base-material totals.
+/// </summary>
+public sealed class SqlRecipeRepository(SqlRecipeRepositoryOptions options) : IRecipeRepository
+{
+    public async Task<RecipeBreakdown?> GetRecipeBreakdownAsync(
+        string gameKey, int recipeId, int quantity, CancellationToken cancellationToken = default)
+    {
+        await using var connection = new SqlConnection(options.GetConnectionString(gameKey));
+        await using var command = new SqlCommand(options.BreakdownProcedure, connection)
+        {
+            CommandType = CommandType.StoredProcedure,
+        };
+        command.Parameters.Add("@GameKey", SqlDbType.VarChar, 50).Value = gameKey;
+        command.Parameters.Add("@RecipeId", SqlDbType.Int).Value = recipeId;
+        command.Parameters.Add("@Quantity", SqlDbType.Int).Value = quantity;
+
+        await connection.OpenAsync(cancellationToken);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        // 1. Header: no row means the game or recipe was not found.
+        if (!await reader.ReadAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var gameName = reader.GetString(reader.GetOrdinal("GameName"));
+        var recipeName = reader.GetString(reader.GetOrdinal("RecipeName"));
+
+        // 2. Ingredient rows.
+        await reader.NextResultAsync(cancellationToken);
+        var ingredients = new List<RecipeIngredientRow>();
+        int level = reader.GetOrdinal("Level"),
+            itemName = reader.GetOrdinal("ItemName"),
+            rowQuantity = reader.GetOrdinal("Quantity"),
+            isBaseMaterial = reader.GetOrdinal("IsBaseMaterial");
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            ingredients.Add(new RecipeIngredientRow(
+                reader.GetInt32(level),
+                reader.GetString(itemName),
+                reader.GetInt32(rowQuantity),
+                reader.GetBoolean(isBaseMaterial)));
+        }
+
+        // 3. Base-material totals.
+        await reader.NextResultAsync(cancellationToken);
+        var baseMaterials = new List<BaseMaterialTotal>();
+        int totalName = reader.GetOrdinal("ItemName"),
+            totalQuantity = reader.GetOrdinal("Quantity");
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            baseMaterials.Add(new BaseMaterialTotal(
+                reader.GetString(totalName),
+                reader.GetInt32(totalQuantity)));
+        }
+
+        return new RecipeBreakdown(gameName, recipeName, quantity, ingredients, baseMaterials);
+    }
+}

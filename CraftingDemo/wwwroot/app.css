@@ -10,11 +10,15 @@
     --border: #eadfc4;
     --hover: #f7eed6;
     --accent: var(--brand-banner-bottom);
-    --row-even: var(--brand-gaming-light);
+    /* Ingredients panel: the website's Gaming panel colour, with rows one
+       step lighter and one step deeper so they stand out against it. */
+    --panel-gaming: var(--brand-gaming-light);
+    --row-even: #fff9e6;
     --row-odd: #ffe6a1;
-    /* Blue from the Music section: the complement of the gold rows above. */
+    /* Totals panel: the website's Music panel colour, the complement of the gold. */
+    --panel-music: var(--brand-music-light);
     --total-even: #eef8fe;
-    --total-odd: var(--brand-music-light);
+    --total-odd: #c9e7fa;
     --indent: 1.5rem;
 }
 

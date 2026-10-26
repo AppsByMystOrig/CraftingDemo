@@ -7,8 +7,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Sample data for the prototype; swap for the SQL Server implementation later.
-builder.Services.AddScoped<IRecipeRepository, SampleRecipeRepository>();
+// Recipe data comes from SQL Server, or from hardcoded sample data when
+// RecipeDatabase:UseSampleData is true (handy without a database).
+var recipeDatabase = builder.Configuration.GetSection("RecipeDatabase");
+if (recipeDatabase.GetValue<bool>("UseSampleData"))
+{
+    builder.Services.AddScoped<IRecipeRepository, SampleRecipeRepository>();
+}
+else
+{
+    var configuration = builder.Configuration;
+    var defaultName = recipeDatabase["ConnectionStringName"] ?? "CraftingDemo";
+
+    // A game with its own entry under ConnectionStrings (named by its game key)
+    // uses that database; every other game uses the default one.
+    builder.Services.AddSingleton(new SqlRecipeRepositoryOptions(
+        gameKey => configuration.GetConnectionString(gameKey)
+            ?? configuration.GetConnectionString(defaultName)
+            ?? throw new InvalidOperationException($"Connection string '{defaultName}' is not configured."),
+        recipeDatabase["BreakdownProcedure"] ?? "dbo.GetRecipeBreakdown"));
+    builder.Services.AddScoped<IRecipeRepository, SqlRecipeRepository>();
+}
 
 var app = builder.Build();
 

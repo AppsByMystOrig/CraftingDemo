@@ -1,12 +1,13 @@
 @page "/"
 @rendermode InteractiveServer
 @inject IRecipeRepository Recipes
+@inject ILogger<Recipe> Logger
 
 <PageTitle>@(breakdown?.RecipeName ?? "Recipe") – CraftingDemo</PageTitle>
 
 @if (breakdown is null)
 {
-    <p class="status">@(loaded ? "Recipe not found." : "Loading recipe…")</p>
+    <p class="status">@StatusMessage</p>
 }
 else
 {
@@ -33,7 +34,7 @@ else
     </header>
 
     <div class="panels">
-        <section class="panel" aria-labelledby="ingredients-heading">
+        <section class="panel panel-gaming" aria-labelledby="ingredients-heading">
             <h2 id="ingredients-heading">Ingredients</h2>
             <ul class="rows leveled">
                 @foreach (var row in breakdown.Ingredients)
@@ -52,7 +53,7 @@ else
             </ul>
         </section>
 
-        <section class="panel" aria-labelledby="totals-heading">
+        <section class="panel panel-music" aria-labelledby="totals-heading">
             <h2 id="totals-heading">Base material totals</h2>
             <ul class="rows striped">
                 @foreach (var total in breakdown.BaseMaterials)
@@ -77,7 +78,13 @@ else
 
     private RecipeBreakdown? breakdown;
     private bool loaded;
+    private bool loadFailed;
     private int quantity = MinQuantity;
+
+    private string StatusMessage =>
+        loadFailed ? "The recipe could not be loaded. Please try again later."
+        : loaded ? "Recipe not found."
+        : "Loading recipe…";
 
     protected override Task OnInitializedAsync() => LoadAsync();
 
@@ -89,8 +96,19 @@ else
 
     private async Task LoadAsync()
     {
-        breakdown = await Recipes.GetRecipeBreakdownAsync(
-            SampleRecipeRepository.SampleGameKey, SampleRecipeRepository.SampleRecipeId, quantity);
+        try
+        {
+            breakdown = await Recipes.GetRecipeBreakdownAsync(
+                SampleRecipeRepository.SampleGameKey, SampleRecipeRepository.SampleRecipeId, quantity);
+            loadFailed = false;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load recipe breakdown");
+            breakdown = null;
+            loadFailed = true;
+        }
+
         loaded = true;
     }
 }
