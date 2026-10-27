@@ -42,7 +42,8 @@ else
             ?? throw new InvalidOperationException("Game:DisplayName is not configured."),
         builder.Configuration.GetConnectionString("GameDatabase")
             ?? throw new InvalidOperationException("Connection string 'GameDatabase' is not configured."),
-        recipeDatabase["BreakdownProcedure"] ?? "dbo.GetRecipeBreakdown"));
+        recipeDatabase["BreakdownProcedure"] ?? "dbo.GetRecipeBreakdown",
+        recipeDatabase["SearchProcedure"] ?? "dbo.SearchRecipes"));
     builder.Services.AddScoped<IRecipeRepository, SqlRecipeRepository>();
 }
 

@@ -1,22 +1,19 @@
 @page "/"
 @rendermode InteractiveServer
 @inject IRecipeRepository Recipes
+@inject IConfiguration Configuration
 @inject ILogger<Recipe> Logger
 
-<PageTitle>@(breakdown?.RecipeName ?? "Recipe") – CraftingDemo</PageTitle>
+<PageTitle>@(breakdown?.RecipeName ?? GameName) – CraftingDemo</PageTitle>
 
-@if (breakdown is null)
-{
-    <p class="status">@StatusMessage</p>
-}
-else
-{
-    <header class="recipe-header">
-        <div>
-            <p class="game-name">@breakdown.GameName</p>
-            <h1>@breakdown.RecipeName</h1>
-        </div>
+<header class="recipe-header">
+    <div>
+        <p class="game-name">@GameName</p>
+        <h1>@(breakdown?.RecipeName ?? "Choose an item to craft")</h1>
+    </div>
 
+    @if (breakdown is not null)
+    {
         <div class="quantity">
             <label for="quantity">Quantity</label>
             <div class="stepper">
@@ -31,8 +28,45 @@ else
                         @onclick="() => SetQuantityAsync(quantity + 1)">+</button>
             </div>
         </div>
-    </header>
+    }
+</header>
 
+<section class="panel panel-picker" aria-labelledby="search-heading">
+    <h2 id="search-heading">Find an item</h2>
+    <div class="search">
+        <input type="search" aria-label="Item name" placeholder="e.g. sword" maxlength="100"
+               @bind="searchText" @bind:event="oninput" @onkeydown="OnSearchKeyDown" />
+        <button type="button" @onclick="SearchAsync">Search</button>
+    </div>
+
+    @if (searchFailed)
+    {
+        <p class="message">The search could not be completed. Please try again later.</p>
+    }
+    else if (searched && results.Count == 0)
+    {
+        <p class="message">No craftable items match “@lastSearch”.</p>
+    }
+    else
+    {
+        <ul class="results">
+            @foreach (var recipe in results)
+            {
+                <li>
+                    <label class="result">
+                        <input type="radio" name="recipe" value="@recipe.RecipeId"
+                               checked="@(recipe.RecipeId == selectedRecipeId)"
+                               @onchange="() => SelectAsync(recipe.RecipeId)" />
+                        <span>@recipe.Name</span>
+                    </label>
+                </li>
+            }
+        </ul>
+    }
+</section>
+
+@if (breakdown is not null)
+{
     <div class="panels">
         <section class="panel panel-gaming" aria-labelledby="ingredients-heading">
             <h2 id="ingredients-heading">Ingredients</h2>
@@ -67,18 +101,30 @@ else
         </section>
     </div>
 }
+else if (selectedRecipeId is not null)
+{
+    <p class="status">@StatusMessage</p>
+}
 
 @code {
     private const int MinQuantity = 1;
     private const int MaxQuantity = 999;
 
-    // Fixed until there is a way to pick a recipe.
-    private const int RecipeId = 1;
-
     // Backgrounds alternate by level parity; see Recipe.razor.css.
     private static string LevelClass(int level) =>
         (level == 0 ? "level-0 " : "") + (level % 2 == 0 ? "level-even" : "level-odd");
 
+    private string GameName => Configuration["Game:DisplayName"] ?? "";
+
+    // Search
+    private string searchText = "";
+    private string lastSearch = "";
+    private IReadOnlyList<RecipeSummary> results = [];
+    private bool searched;
+    private bool searchFailed;
+
+    // Selected recipe
+    private int? selectedRecipeId;
     private RecipeBreakdown? breakdown;
     private bool loaded;
     private bool loadFailed;
@@ -89,7 +135,41 @@ else
         : loaded ? "Recipe not found."
         : "Loading recipe…";
 
-    protected override Task OnInitializedAsync() => LoadAsync();
+    // Start with the full list (an empty search) so there is something to pick.
+    protected override Task OnInitializedAsync() => SearchAsync();
+
+    private async Task OnSearchKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchAsync();
+        }
+    }
+
+    private async Task SearchAsync()
+    {
+        try
+        {
+            results = await Recipes.SearchRecipesAsync(searchText);
+            searchFailed = false;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to search recipes");
+            results = [];
+            searchFailed = true;
+        }
+
+        lastSearch = searchText.Trim();
+        searched = true;
+    }
+
+    private Task SelectAsync(int recipeId)
+    {
+        selectedRecipeId = recipeId;
+        loaded = false;
+        return LoadAsync();
+    }
 
     private Task SetQuantityAsync(int value)
     {
@@ -99,9 +179,14 @@ else
 
     private async Task LoadAsync()
     {
+        if (selectedRecipeId is not int recipeId)
+        {
+            return;
+        }
+
         try
         {
-            breakdown = await Recipes.GetRecipeBreakdownAsync(RecipeId, quantity);
+            breakdown = await Recipes.GetRecipeBreakdownAsync(recipeId, quantity);
             loadFailed = false;
         }
         catch (Exception ex)

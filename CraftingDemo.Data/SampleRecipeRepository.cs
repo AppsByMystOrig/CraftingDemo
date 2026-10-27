@@ -39,6 +39,17 @@ public sealed class SampleRecipeRepository : IRecipeRepository
         new("Rune Dust", 1),
     ];
 
+    // The sample game has one recipe; a real search runs in dbo.SearchRecipes.
+    public Task<IReadOnlyList<RecipeSummary>> SearchRecipesAsync(
+        string searchText, CancellationToken cancellationToken = default)
+    {
+        const string name = "Emberforged Longsword";
+        IReadOnlyList<RecipeSummary> results = name.Contains(searchText.Trim(), StringComparison.OrdinalIgnoreCase)
+            ? [new RecipeSummary(SampleRecipeId, name)]
+            : [];
+        return Task.FromResult(results);
+    }
+
     public Task<RecipeBreakdown?> GetRecipeBreakdownAsync(
         int recipeId, int quantity, CancellationToken cancellationToken = default)
     {
