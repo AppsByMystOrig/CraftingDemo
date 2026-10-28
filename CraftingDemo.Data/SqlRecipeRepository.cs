@@ -66,7 +66,7 @@ public sealed class SqlRecipeRepository(SqlRecipeRepositoryOptions options) : IR
 
         var recipeName = reader.GetString(reader.GetOrdinal("RecipeName"));
 
-        // 2. Ingredient rows.
+        // 2. Ingredient rows. Quantities may be int or decimal depending on the game's database.
         await reader.NextResultAsync(cancellationToken);
         var ingredients = new List<RecipeIngredientRow>();
         int level = reader.GetOrdinal("Level"),
@@ -78,7 +78,7 @@ public sealed class SqlRecipeRepository(SqlRecipeRepositoryOptions options) : IR
             ingredients.Add(new RecipeIngredientRow(
                 reader.GetInt32(level),
                 reader.GetString(itemName),
-                reader.GetInt32(rowQuantity),
+                Convert.ToDecimal(reader.GetValue(rowQuantity)),
                 reader.GetBoolean(isBaseMaterial)));
         }
 
@@ -91,7 +91,7 @@ public sealed class SqlRecipeRepository(SqlRecipeRepositoryOptions options) : IR
         {
             baseMaterials.Add(new BaseMaterialTotal(
                 reader.GetString(totalName),
-                reader.GetInt32(totalQuantity)));
+                Convert.ToDecimal(reader.GetValue(totalQuantity))));
         }
 
         return new RecipeBreakdown(options.GameName, recipeName, quantity, ingredients, baseMaterials);

@@ -81,7 +81,7 @@
                                 <span class="tag">base</span>
                             }
                         </span>
-                        <span class="item-quantity">× @row.Quantity.ToString("N0")</span>
+                        <span class="item-quantity">× @FormatQuantity(row.Quantity)</span>
                     </li>
                 }
             </ul>
@@ -94,7 +94,7 @@
                 {
                     <li class="row">
                         <span class="item-name">@total.ItemName</span>
-                        <span class="item-quantity">× @total.Quantity.ToString("N0")</span>
+                        <span class="item-quantity">× @FormatQuantity(total.Quantity)</span>
                     </li>
                 }
             </ul>
@@ -109,6 +109,9 @@ else if (selectedRecipeId is not null)
 @code {
     private const int MinQuantity = 1;
     private const int MaxQuantity = 999;
+
+    // Whole numbers show without decimals (12); fractions only when present (2.5).
+    private static string FormatQuantity(decimal quantity) => quantity.ToString("#,0.####");
 
     // Backgrounds alternate by level parity; see Recipe.razor.css.
     private static string LevelClass(int level) =>
