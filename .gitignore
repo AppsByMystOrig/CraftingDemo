@@ -488,3 +488,5 @@ $RECYCLE.BIN/
 # (e.g. SSMS "Generate Scripts" with data). Save those in Database/Private/.
 *.bak
 Database/Private/
+# SSMS-generated script of the full tlccDB (schema + data)
+tlccdb_create.sql
