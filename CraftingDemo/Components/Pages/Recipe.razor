@@ -4,7 +4,7 @@
 @inject IConfiguration Configuration
 @inject ILogger<Recipe> Logger
 
-<PageTitle>@(breakdown?.RecipeName ?? GameName) – CraftingDemo</PageTitle>
+<PageTitle>@(breakdown?.RecipeName ?? GameName) – Crafting Requirements</PageTitle>
 
 <header class="recipe-header">
     <div>
@@ -34,7 +34,7 @@
 <section class="panel panel-picker" aria-labelledby="search-heading">
     <h2 id="search-heading">Find an item</h2>
     <div class="search">
-        <input type="search" aria-label="Item name" placeholder="e.g. sword" maxlength="100"
+        <input type="search" aria-label="Item name" placeholder="e.g. Rifle" maxlength="100"
                @bind="searchText" @bind:event="oninput" @onkeydown="OnSearchKeyDown" />
         <button type="button" @onclick="SearchAsync">Search</button>
     </div>

@@ -483,3 +483,8 @@ $RECYCLE.BIN/
 
 # Affinity source files (masters live in abmwebsite/images, kept local)
 *.af
+
+# Game data stays private: backups, and any script that holds data
+# (e.g. SSMS "Generate Scripts" with data). Save those in Database/Private/.
+*.bak
+Database/Private/
