@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Games – Apps By Myst</title>
+    <meta name="description" content="Crafting companions for the games Myst plays." />
+    <link rel="icon" type="image/svg+xml" href="images/yt_watermark.svg" />
+    <link rel="icon" type="image/png" href="images/yt_watermark.png" />
+    <link rel="stylesheet" href="brand.css" />
+    <style>
+        :root {
+            color-scheme: light;
+            --on-bg: var(--brand-text);
+            --on-bg-muted: var(--brand-text-muted);
+            --surface: #fffcf5;
+            --text: var(--brand-ink);
+            --muted: #6b5f7d;
+            --border: #eadfc4;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html { height: 100%; }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            margin: 0;
+            color: var(--on-bg);
+        }
+
+        .site-header, .content {
+            width: 100%;
+            max-width: 60rem;
+            margin: 0 auto;
+        }
+
+        .site-header { padding: 1rem 1rem 0; }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
+            color: var(--on-bg);
+            text-decoration: none;
+        }
+
+        .brand-logo { display: block; width: 4.5rem; height: auto; }
+
+        .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+
+        .brand-name { font-size: 1.6rem; font-weight: 800; letter-spacing: 0.02em; }
+
+        .app-name {
+            margin-top: 0.2rem;
+            color: var(--brand-blue);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .content { flex: 1; padding: 1.5rem 1rem 2rem; }
+
+        h1 { margin: 0 0 0.35rem; font-size: 1.75rem; }
+
+        .lead { margin: 0 0 1.5rem; color: var(--on-bg-muted); }
+
+        .games {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .game {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            border-top: 0.35rem solid var(--brand-gold);
+            border-radius: 0.6rem;
+            background: var(--surface);
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.18);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+            .game:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0.6rem 1.6rem rgba(0, 0, 0, 0.25);
+            }
+
+            .game:focus-visible { outline: 3px solid var(--brand-blue); outline-offset: 3px; }
+
+        .game-kind {
+            margin: 0 0 0.35rem;
+            color: var(--brand-banner-bottom);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .game-name { margin: 0 0 0.5rem; font-size: 1.3rem; }
+
+        .game-about { flex: 1; margin: 0 0 1rem; color: var(--muted); }
+
+        .game-open {
+            align-self: flex-start;
+            padding: 0.5rem 1rem;
+            border-radius: 0.4rem;
+            background: var(--brand-gold);
+            color: var(--brand-ink);
+            font-weight: 700;
+        }
+
+        .site-footer {
+            padding: 1rem;
+            color: var(--on-bg-muted);
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        @media (max-width: 30rem) {
+            .site-header { padding: 0.75rem 0.75rem 0; }
+            .brand-logo { width: 3.5rem; }
+            .brand-name { font-size: 1.35rem; }
+            .content { padding: 1rem 0.75rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="https://appsbymyst.com" target="_blank" rel="noopener">
+            <img class="brand-logo" src="images/logo.png" width="682" height="615"
+                 alt="Moments with Myst — Life, Music, Gaming" />
+            <span class="brand-text">
+                <span class="brand-name">Apps By Myst</span>
+                <span class="app-name">Games</span>
+            </span>
+        </a>
+    </header>
+
+    <main class="content">
+        <h1>Choose a game</h1>
+        <p class="lead">Crafting companions for the games I play.</p>
+
+        <!-- One <li> per game. The link is the game's path on this site. -->
+        <ul class="games">
+            <li>
+                <a class="game" href="lastcaretaker/">
+                    <p class="game-kind">Crafting Requirements</p>
+                    <h2 class="game-name">The Last Caretaker</h2>
+                    <p class="game-about">Pick an item and see everything it takes to craft it, down to the base materials.</p>
+                    <span class="game-open">Open</span>
+                </a>
+            </li>
+        </ul>
+    </main>
+
+    <footer class="site-footer">
+        &copy; <span id="year">2026</span> appsbymyst
+    </footer>
+
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

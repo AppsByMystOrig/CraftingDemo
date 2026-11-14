@@ -1,0 +1,32 @@
+/* appsbymyst brand values.
+   Source of truth: abmwebsite/css/style.css. Keep these in sync with it. */
+:root {
+    --brand-banner-top: #65799b;
+    --brand-banner-bottom: #5e2663;
+    --brand-text: #ffffff;
+    --brand-text-muted: #ddd6e6;
+    --brand-blue: #2ea3e8;
+    --brand-gold: #f5b400;
+    --brand-silver: #c9c9cf;
+    --brand-ink: #2b2140;
+    /* Light section tints used behind content on the website. */
+    --brand-gaming-light: #fff3cf;
+    --brand-music-light: #dff1fc;
+    --brand-life-light: #b9b9c2;
+    --brand-font: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--brand-banner-bottom);
+    font-family: var(--brand-font);
+}
+
+/* The banner gradient (a 1px-wide slice of yt_banner.png) stretched over the
+   viewport; it stays put while the page scrolls, as on the website. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--brand-banner-bottom) url("images/banner_bg.png") 0 0 / 100% 100% no-repeat;
+}
